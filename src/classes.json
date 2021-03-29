@@ -1,0 +1,91 @@
+{
+  "deathknight": {
+    "name": "Deathknight",
+    "color": "C41F3B",
+    "cooldowns": [
+      {
+        "id": 165775,
+        "name": "Anti Magic Zone",
+        "cooldown": 120
+      }
+    ]
+  },
+  "demon_hunter": {
+    "name":  "Demon Hunter",
+    "color": "A330C9",
+    "cooldowns": [
+      {
+        "id": 196718,
+        "name": "Darkness",
+        "cooldown": 180
+      }
+    ]
+  },
+  "warrior": {
+    "name":  "Warrior",
+    "color": "C79C6E",
+    "cooldowns": [
+      {
+        "id": 97462,
+        "name": "Rallying Cry",
+        "cooldown": 180
+      }
+    ]
+  },
+  "resto_shaman": {
+    "name":  "Shaman (Resto)",
+    "color": "0070DE",
+    "cooldowns": [
+      {
+        "id": 108280,
+        "name": "Healing Tide Totem",
+        "cooldown": 180
+      },
+      {
+        "id": 98008,
+        "name": "Spirit Link Totem",
+        "cooldown": 180
+      },
+      {
+        "id": 207399,
+        "name": "APT",
+        "cooldown": 300
+      },
+      {
+        "id": 114049,
+        "name": "Ascendance",
+        "cooldown": 180
+      }
+    ]
+  },
+  "holy_priest": {
+    "name":  "Priest (Holy)",
+    "color": "FFFF00",
+    "cooldowns": []
+  },
+  "disc_priest": {
+    "name":  "Priest (Disc)",
+    "color": "FFFFFF",
+    "cooldowns": []
+  },
+  "mw_monk": {
+    "name":  "Monk (MW)",
+    "color": "00FF96",
+    "cooldowns": []
+  },
+  "resto_druid": {
+    "name":  "Druid (Resto)",
+    "color": "FF7D0A",
+    "cooldowns": []
+  },
+  "holy_paladin": {
+    "name":  "Paladin (Holy)",
+    "color": "F58CBA",
+    "cooldowns": []
+  },
+  "shadow_priest": {
+    "name":  "Priest (Shadow)",
+    "color": "FFFFFF",
+    "cooldowns": []
+  }
+}
