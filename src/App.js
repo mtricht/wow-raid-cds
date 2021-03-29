@@ -11,13 +11,13 @@ const getCooldown = spellId => cooldowns.filter(it => it.id === spellId)[0];
 
 const generateERT = (encounter, assignments) => {
   const ertNote = encounter.timers.map((ability, index) => {
-    let abilityText = `|cff${ability.color}${ability.name}|r - {time:${secondsToHHMM(ability.time)}}`;
+    let abilityText = `{time:${secondsToHHMM(ability.time)}} : |cff${ability.color}${ability.name}|r - `;
     if (assignments[index] === undefined || assignments[index] === null || assignments[index].length === 0) {
       return abilityText;
     }
     abilityText += " " + (assignments[index].map(assignment => {
-      return `${assignment.player}{spell:${assignment.spellId}}`;
-    }).join(""));
+      return `${assignment.player} {spell:${assignment.spellId}}`;
+    }).join(" + "));
     return abilityText;
   });
   navigator.clipboard.writeText(ertNote.join("\n"));
