@@ -11,7 +11,7 @@ const getCooldown = spellId => cooldowns.filter(it => it.id === spellId)[0];
 
 const generateERT = (encounter, assignments) => {
   const ertNote = encounter.timers.map((ability, index) => {
-    let abilityText = `{time:${secondsToHHMM(ability.time)}} : |cff${ability.color}${ability.name}|r - `;
+    let abilityText = `{time:${secondsToHHMM(ability.time)}}: |cff${ability.color}${ability.name}|r - `;
     if (assignments[index] === undefined || assignments[index] === null || assignments[index].length === 0) {
       return abilityText;
     }
