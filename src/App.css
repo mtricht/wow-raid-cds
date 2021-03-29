@@ -2,16 +2,20 @@ body {
   margin: 20px;
 }
 
+.container {
+  max-width: 100%;
+}
+
 .fa-plus {
   color: #66FF33;
   cursor: pointer;
 }
 
-.fa-trash {
-  color: #FF5764;
+.fa-trash, .fa-times {
+  color: #e74c3c;
   cursor: pointer;
 }
 
-.dropdown-toggle:after {
-  display: none;
+#assignments tbody tr:hover, #cooldown-list tr:hover {
+  background-color: #375a7f;;
 }

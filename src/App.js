@@ -1,96 +1,95 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import './App.css';
-import classes from './classes.json';
-import bosses from './castle_nathria.json';
-import {Button} from 'react-bootstrap';
-import Cooldown from './Cooldown.js';
+import RaidSetup from './RaidSetup';
+import bosses from './data/castle_nathria.json';
+import cooldowns from './data/cooldowns.json';
+import {Button, Overlay, Tooltip} from 'react-bootstrap';
+import CooldownList from './CooldownList';
+
+const secondsToHHMM = seconds => new Date(seconds * 1000).toISOString().substr(14, 5);
+const getCooldown = spellId => cooldowns.filter(it => it.id === spellId)[0];
+
+const generateERT = (encounter, assignments) => {
+  const ertNote = encounter.timers.map((ability, index) => {
+    let abilityText = `|cff${ability.color}${ability.name}|r - {time:${secondsToHHMM(ability.time)}}`;
+    if (assignments[index] === undefined || assignments[index] === null || assignments[index].length === 0) {
+      return abilityText;
+    }
+    abilityText += " " + (assignments[index].map(assignment => {
+      return `${assignment.player}{spell:${assignment.spellId}}`;
+    }).join(""));
+    return abilityText;
+  });
+  navigator.clipboard.writeText(ertNote.join("\n"));
+};
 
 function App() {
-  const [newPlayerName, setNewPlayerName] = useState("");
-  const [newPlayerClass, setNewPlayerClass] = useState("");
   const [players, setPlayers] = useState([]);
-  const addPlayer = () => {
-    if (newPlayerName === "" || newPlayerClass === "") {
-      return;
-    }
-    players.push({
-      name: newPlayerName,
-      class: newPlayerClass
-    });
-    setPlayers(players);
-    setNewPlayerName("");
-    setNewPlayerClass("");
-  };
-  const removePlayer = (name) => {
-    setPlayers(players.filter(player => player.name !== name));
-  };
   const [encounter, setEncounter] = useState("");
-  const [assignments, setAssignments] = useState([]);
+  const [assignments, setAssignments] = useState({});
+  const [selectedRow, setSelectedRow] = useState(0);
+  const [show, setShow] = useState(false);
+  const target = useRef(null);
+  const removeAssignment = (row, index) => {
+    const newAssignments = JSON.parse(JSON.stringify(assignments));
+    newAssignments[encounter][row].splice(index, 1);
+    setAssignments(newAssignments);
+  }
+  const handleGenerateERT = () => {
+    setShow(true);
+    generateERT(bosses[encounter], assignments[encounter]);
+    setTimeout(() => setShow(false), 2500);
+  }
   return (
-    <div class="d-flex flex-row">
-      <div>
-        <h2>Raid setup</h2>
-        <form class="form-inline">
-          <input placeholder="Player's name" type="text" class="form-control mb-2 mr-sm-2" 
-            value={newPlayerName} onChange={event => setNewPlayerName(event.target.value)} />
-          <div class="input-group mb-2 mr-sm-2">
-            <select class="form-control" value={newPlayerClass} onChange={event => setNewPlayerClass(event.target.value)}>
-              <option value="">Select a class</option>
-              {Object.keys(classes).sort().map(classKey => 
-                <option value={classKey}>{classes[classKey].name}</option>
-              )}
-            </select>
-            <div class="input-group-append">
-              <div class="input-group-text"><i class="fas fa-plus" onClick={addPlayer} /></div>
-            </div>
-          </div>
-        </form>
-        <table class="table table-dark table-striped">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Class (spec)</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {players.map(player => <tr key={player.name}>
-              <td style={{color: "#" + classes[player.class].color}}>{player.name}</td>
-              <td style={{color: "#" + classes[player.class].color}}>{classes[player.class].name}</td>
-              <td><i class="fas fa-trash" id="trash" onClick={() => removePlayer(player.name)} /></td>
-            </tr>)}
-          </tbody>
-        </table>
-        <p>By <a href="https://tricht.dev/" target="_blank" rel="noreferrer">Michael</a> - <a href="https://github.com/mtricht/wow-raid-cds" target="_blank" rel="noreferrer">View on <i class="fab fa-github"></i></a></p>
-      </div> 
-      <div style={{marginLeft: "40px", width: "50%"}}>
-        <h2>Cooldown assignments</h2>
-        <select value={encounter} class="form-control mb-2 mr-sm-2" style={{width: "300px"}}
+    <div className="container">
+    <div className="row">
+      <RaidSetup players={players} setPlayers={setPlayers} />
+      <div className="col-6">
+        <select value={encounter} className="form-control mb-2 mr-sm-2" style={{width: "300px"}}
           onChange={event => setEncounter(event.target.value)}>
           <option value="">Select an encounter</option>
-          {Object.keys(bosses).map(boss => <option value={boss}>{bosses[boss].name}</option>)}
+          {Object.keys(bosses).map(boss => <option key={boss} value={boss}>{bosses[boss].name}</option>)}
         </select>
-        <table class="table table-dark table-striped">
+        {encounter !== "" && <><table className="table table-dark table-striped" id="assignments">
           <thead>
             <tr>
               <th>Time</th>
               <th>Ability</th>
-              <th>Assignment</th>
+              <th width="70%">Assignment(s)</th>
             </tr>
           </thead>
           <tbody>
-            {encounter !== "" && bosses[encounter].timers.map(ability => <tr>
-              <td>{new Date(ability.time * 1000).toISOString().substr(14, 5)}</td>
+            {bosses[encounter].timers.map((ability, index) => <tr key={ability.time + ability.name}
+              className={index === selectedRow ? "table-info" : ""}
+              onClick={() => setSelectedRow(index)}
+              style={{cursor: "pointer"}}>
+              <td>{secondsToHHMM(ability.time)}</td>
               <td>{ability.name}</td>
               <td>
-              <Cooldown players={players} assignments={assignments} setAssignments={setAssignments} />
+                {assignments[encounter] && assignments[encounter][index] &&
+                  assignments[encounter][index].map((assignment, assignmentIndex) => <div key={assignment.player + assignment.spellId}>
+                  <a href="#" data-wowhead={`spell=${assignment.spellId}`}></a> {assignment.player}'s {getCooldown(assignment.spellId).name}
+                  &nbsp;<i className="fas fa-times" id="trash" onClick={() => removeAssignment(index, assignmentIndex)} />
+                </div>)}
               </td>
             </tr>)}
           </tbody>
         </table>
-        <Button className="m-2" variant="primary">Copy link</Button>
-        <Button className="m-2" variant="success" disabled={encounter === ""}>Generate ERT note</Button>
+        <Button className="m-2" variant="success" onClick={handleGenerateERT} ref={target}>Generate ERT note</Button>
+        <Overlay target={target.current} show={show} placement="right">
+          {(props) => (
+            <Tooltip {...props}>
+              Copied ERT note
+            </Tooltip>
+          )}
+        </Overlay>
+      </>}
       </div>
+      <div className="col-3">
+        {encounter !== "" && <CooldownList players={players} assignments={assignments} setAssignments={setAssignments}
+          encounter={encounter} row={selectedRow} />}
+      </div>
+    </div>
     </div>
   );
 }

@@ -1,0 +1,72 @@
+{
+  "shriekwing": {
+    "name": "Shriekwing",
+    "timers": [
+      {
+        "time": 13,
+        "name": "Wave of Blood 1",
+        "color": "ff0000"
+      },
+      {
+        "time": 39,
+        "name": "Wave of Blood 2",
+        "color": "ff0000"
+      },
+      {
+        "time": 67,
+        "name": "Wave of Blood 3",
+        "color": "ff0000"
+      },
+      {
+        "time": 92,
+        "name": "Wave of Blood 4",
+        "color": "ff0000"
+      },
+      {
+        "time": 163,
+        "name": "Wave of Blood 5",
+        "color": "ff0000"
+      },
+      {
+        "time": 188,
+        "name": "Wave of Blood 6",
+        "color": "ff0000"
+      },
+      {
+        "time": 216,
+        "name": "Wave of Blood 7",
+        "color": "ff0000"
+      },
+      {
+        "time": 241,
+        "name": "Wave of Blood 8",
+        "color": "ff0000"
+      },
+      {
+        "time": 310,
+        "name": "Wave of Blood 9",
+        "color": "ff0000"
+      },
+      {
+        "time": 335,
+        "name": "Wave of Blood 10",
+        "color": "ff0000"
+      }
+    ]
+  },
+  "huntsman_altimor": {
+    "name": "Huntsman Altimor",
+    "timers": [
+      {
+        "time": 33,
+        "name": "Sinseeker 1",
+        "color": "0000ff"
+      },
+      {
+        "time": 210,
+        "name": "Sinseeker 2",
+        "color": "0000ff"
+      }
+    ]
+  }
+}
