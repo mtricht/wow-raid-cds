@@ -3,7 +3,6 @@ import classes from "./data/classes.json";
 import cooldowns from "./data/cooldowns.json";
 
 function CooldownList({ players, assignments, setAssignments, encounter, row }) {
-  useEffect(() => window.$WowheadPower.refreshLinks());
   const addCooldown = (player, spellId) => {
     const newAssignments = JSON.parse(JSON.stringify(assignments));
     if (newAssignments[encounter] === undefined || newAssignments[encounter] === null) {

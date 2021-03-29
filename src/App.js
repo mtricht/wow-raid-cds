@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './App.css';
 import RaidSetup from './RaidSetup';
 import bosses from './data/castle_nathria.json';
@@ -11,7 +11,7 @@ const getCooldown = spellId => cooldowns.filter(it => it.id === spellId)[0];
 
 const generateERT = (encounter, assignments) => {
   const ertNote = encounter.timers.map((ability, index) => {
-    let abilityText = `{time:${secondsToHHMM(ability.time)}}: |cff${ability.color}${ability.name}|r - `;
+    let abilityText = `{time:${secondsToHHMM(ability.time)}}: {spell:${ability.id}}|cff${ability.color}${ability.name}|r - `;
     if (assignments[index] === undefined || assignments[index] === null || assignments[index].length === 0) {
       return abilityText;
     }
@@ -24,6 +24,7 @@ const generateERT = (encounter, assignments) => {
 };
 
 function App() {
+  useEffect(() => window.$WowheadPower.refreshLinks());
   const [players, setPlayers] = useState([]);
   const [encounter, setEncounter] = useState("");
   const [assignments, setAssignments] = useState({});
@@ -34,19 +35,23 @@ function App() {
     const newAssignments = JSON.parse(JSON.stringify(assignments));
     newAssignments[encounter][row].splice(index, 1);
     setAssignments(newAssignments);
-  }
+  };
   const handleGenerateERT = () => {
     setShow(true);
     generateERT(bosses[encounter], assignments[encounter]);
     setTimeout(() => setShow(false), 2500);
-  }
+  };
+  const changeEncounter = encounter => {
+    setEncounter(encounter);
+    setSelectedRow(0);
+  };
   return (
     <div className="container">
     <div className="row">
       <RaidSetup players={players} setPlayers={setPlayers} />
       <div className="col-6">
         <select value={encounter} className="form-control mb-2 mr-sm-2" style={{width: "300px"}}
-          onChange={event => setEncounter(event.target.value)}>
+          onChange={event => changeEncounter(event.target.value)}>
           <option value="">Select an encounter</option>
           {Object.keys(bosses).map(boss => <option key={boss} value={boss}>{bosses[boss].name}</option>)}
         </select>
@@ -64,11 +69,11 @@ function App() {
               onClick={() => setSelectedRow(index)}
               style={{cursor: "pointer"}}>
               <td>{secondsToHHMM(ability.time)}</td>
-              <td>{ability.name}</td>
+              <td><a href="#" data-wowhead={`spell=${ability.id}`}>{ability.name}</a></td>
               <td>
                 {assignments[encounter] && assignments[encounter][index] &&
                   assignments[encounter][index].map((assignment, assignmentIndex) => <div key={assignment.player + assignment.spellId}>
-                  <a href="#" data-wowhead={`spell=${assignment.spellId}`}></a> {assignment.player}'s {getCooldown(assignment.spellId).name}
+                  <a href="#" data-wowhead={`spell=${assignment.spellId}`}></a>{assignment.player}'s {getCooldown(assignment.spellId).name}
                   &nbsp;<i className="fas fa-times" id="trash" onClick={() => removeAssignment(index, assignmentIndex)} />
                 </div>)}
               </td>
