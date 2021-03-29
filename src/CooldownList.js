@@ -6,10 +6,10 @@ function CooldownList({ players, assignments, setAssignments, encounter, row }) 
   useEffect(() => window.$WowheadPower.refreshLinks());
   const addCooldown = (player, spellId) => {
     const newAssignments = JSON.parse(JSON.stringify(assignments));
-    if (newAssignments[encounter] === undefined) {
+    if (newAssignments[encounter] === undefined || newAssignments[encounter] === null) {
       newAssignments[encounter] = [];
     }
-    if (newAssignments[encounter][row] === undefined) {
+    if (newAssignments[encounter][row] === undefined || newAssignments[encounter][row] === null) {
       newAssignments[encounter][row] = [];
     } else if (newAssignments[encounter][row].filter(it => it.player === player && it.spellId === spellId).length > 0) {
       return;
