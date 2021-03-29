@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/wow-raid-cds/static/css/main.823527b7.chunk.css",
+    "main.js": "/wow-raid-cds/static/js/main.6484a345.chunk.js",
+    "main.js.map": "/wow-raid-cds/static/js/main.6484a345.chunk.js.map",
+    "runtime-main.js": "/wow-raid-cds/static/js/runtime-main.bf63a5e7.js",
+    "runtime-main.js.map": "/wow-raid-cds/static/js/runtime-main.bf63a5e7.js.map",
+    "static/js/2.c6d3f41e.chunk.js": "/wow-raid-cds/static/js/2.c6d3f41e.chunk.js",
+    "static/js/2.c6d3f41e.chunk.js.map": "/wow-raid-cds/static/js/2.c6d3f41e.chunk.js.map",
+    "static/js/3.4fd436b2.chunk.js": "/wow-raid-cds/static/js/3.4fd436b2.chunk.js",
+    "static/js/3.4fd436b2.chunk.js.map": "/wow-raid-cds/static/js/3.4fd436b2.chunk.js.map",
+    "index.html": "/wow-raid-cds/index.html",
+    "static/css/main.823527b7.chunk.css.map": "/wow-raid-cds/static/css/main.823527b7.chunk.css.map",
+    "static/js/2.c6d3f41e.chunk.js.LICENSE.txt": "/wow-raid-cds/static/js/2.c6d3f41e.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.bf63a5e7.js",
+    "static/js/2.c6d3f41e.chunk.js",
+    "static/css/main.823527b7.chunk.css",
+    "static/js/main.6484a345.chunk.js"
+  ]
+}
