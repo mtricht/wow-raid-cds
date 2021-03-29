@@ -112,5 +112,17 @@
     "name": "Vampiric Embrace",
     "cooldown": 120,
     "class": "priest_shadow"
+  },
+  {
+    "id": 43185,
+    "name": "Healing potion",
+    "cooldown": 60,
+    "class": ""
+  },
+  {
+    "id": 6262,
+    "name": "Healthstone",
+    "cooldown": 60,
+    "class": ""
   }
 ]

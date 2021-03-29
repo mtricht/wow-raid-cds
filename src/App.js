@@ -10,17 +10,28 @@ const secondsToHHMM = seconds => new Date(seconds * 1000).toISOString().substr(1
 const getCooldown = spellId => cooldowns.filter(it => it.id === spellId)[0];
 
 const generateERT = (encounter, assignments) => {
-  const ertNote = encounter.timers.map((ability, index) => {
+  const ertNote = encounter.map((ability, index) => {
     let abilityText = `{time:${secondsToHHMM(ability.time)}}: {spell:${ability.id}}|cff${ability.color}${ability.name}|r - `;
-    if (assignments[index] === undefined || assignments[index] === null || assignments[index].length === 0) {
+    if (assignments === undefined || assignments === null || assignments[index] === undefined || 
+      assignments[index] === null || assignments[index].length === 0) {
       return abilityText;
     }
     abilityText += " " + (assignments[index].map(assignment => {
-      return `${assignment.player} {spell:${assignment.spellId}}`;
+      return `${assignment.player === "" ? "Everyone" : assignment.player} {spell:${assignment.spellId}}`;
     }).join(" + "));
     return abilityText;
   });
   navigator.clipboard.writeText(ertNote.join("\n"));
+};
+
+const getEncounterRows = abilities => {
+  return abilities.flatMap(ability => ability.timers.map((abilityTime, index) => ({
+    id: ability.id,
+    time: abilityTime,
+    name: `${ability.name} ${index + 1}`,
+    color: ability.color
+  })))
+  .sort((a, b) => a.time - b.time);
 };
 
 function App() {
@@ -38,7 +49,7 @@ function App() {
   };
   const handleGenerateERT = () => {
     setShow(true);
-    generateERT(bosses[encounter], assignments[encounter]);
+    generateERT(getEncounterRows(bosses[encounter].abilities), assignments[encounter]);
     setTimeout(() => setShow(false), 2500);
   };
   const changeEncounter = encounter => {
@@ -52,10 +63,11 @@ function App() {
       <div className="col-6">
         <select value={encounter} className="form-control mb-2 mr-sm-2" style={{width: "300px"}}
           onChange={event => changeEncounter(event.target.value)}>
-          <option value="">Select an encounter</option>
+          <option value="">Select encounter</option>
           {Object.keys(bosses).map(boss => <option key={boss} value={boss}>{bosses[boss].name}</option>)}
         </select>
-        {encounter !== "" && <><table className="table table-dark table-striped" id="assignments">
+        {encounter !== "" && <>
+        <table className="table table-dark table-striped" id="assignments">
           <thead>
             <tr>
               <th>Time</th>
@@ -64,7 +76,7 @@ function App() {
             </tr>
           </thead>
           <tbody>
-            {bosses[encounter].timers.map((ability, index) => <tr key={ability.time + ability.name}
+            {getEncounterRows(bosses[encounter].abilities).map((ability, index) => <tr key={ability.time + ability.name}
               className={index === selectedRow ? "table-info" : ""}
               onClick={() => setSelectedRow(index)}
               style={{cursor: "pointer"}}>
@@ -73,7 +85,8 @@ function App() {
               <td>
                 {assignments[encounter] && assignments[encounter][index] &&
                   assignments[encounter][index].map((assignment, assignmentIndex) => <div key={assignment.player + assignment.spellId}>
-                  <a href="#" data-wowhead={`spell=${assignment.spellId}`}></a>{assignment.player}'s {getCooldown(assignment.spellId).name}
+                  <a href="#" data-wowhead={`spell=${assignment.spellId}`}></a>&nbsp;{assignment.player}{assignment.player !== "" ? "'s" : ""}&nbsp;
+                  {getCooldown(assignment.spellId).name}&nbsp;
                   &nbsp;<i className="fas fa-times" id="trash" onClick={() => removeAssignment(index, assignmentIndex)} />
                 </div>)}
               </td>
